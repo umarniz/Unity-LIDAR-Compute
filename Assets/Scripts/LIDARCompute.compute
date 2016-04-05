@@ -1,0 +1,39 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+//RWTexture2D<float4> Result;
+StructuredBuffer<float> tileData;
+AppendStructuredBuffer<float3> points;
+
+RWStructuredBuffer<int> renderBuffer;
+Texture2D<float> input;
+
+float xOff;
+float yOff;
+
+[numthreads(500,1,1)]
+void CSMain (uint2 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+
+	//int gridY = fmod(id.x, 500.0);
+	
+	//float color =  clamp(Data[id.x] / 26.0, -1.0, 1.0) * 0.5 + 0.5;
+
+	uint x = floor(id.x % 500);
+	uint y = floor(id.x / 500);
+
+	uint2 coord = uint2(x, y);
+
+	//points[250000*tileData[2] + id.x + 4] = float3(tileData[0] + x*2.0, input[coord], tileData[1] +  y*2.0);
+
+	points.Append(float3(tileData[0] + x*2.0, input[coord], tileData[1] +  y*2.0));
+
+	//float color = clamp(input[coord] / 26.0, -1.0, 1.0) * 0.5 + 0.5;
+
+	//color = tileData[2]/8.0;
+    //Result[coord] = float4(color, color, color, 1.0);
+    //Result[id.xy] = float4(id.x/512.0, id.y/512.0, 0.0 , 0.0);
+}
